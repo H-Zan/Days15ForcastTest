@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+   <HorizontalScrollView
+       android:layout_marginTop="10dp"
+       android:scrollbars="none"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:fadeScrollbars="false"
+       >
+       <RelativeLayout
+           android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           >
+           <android.support.v7.widget.RecyclerView
+               android:layout_centerVertical="true"
+               android:id="@+id/id_recyclerview_horizontal"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content">
+           </android.support.v7.widget.RecyclerView>
+           <RelativeLayout
+               android:id="@+id/ll_chart"
+               android:layout_width="match_parent"
+               android:layout_height="176dp"
+               android:layout_centerVertical="true"
+               >
+               
+               
+               
+           </RelativeLayout>
+           <!--<com.admai.days15forcasttest.hours.IndexHorizontalScrollView-->
+               <!--android:layout_centerVertical="true"-->
+               <!--android:layout_marginTop="12dp"-->
+               <!--android:id="@+id/indexHorizontalScrollView"-->
+               <!--android:fadeScrollbars="false"-->
+               <!--android:layout_width="match_parent"-->
+               <!--android:layout_height="wrap_content">-->
+
+               <!--<com.admai.days15forcasttest.hours.Today24HourView-->
+                   <!--android:id="@+id/today24HourView"-->
+                   <!--android:layout_width="wrap_content"-->
+                   <!--android:layout_height="match_parent" />-->
+           <!--</com.admai.days15forcasttest.hours.IndexHorizontalScrollView> -->
+           
+       </RelativeLayout>
+   </HorizontalScrollView>
+</RelativeLayout>

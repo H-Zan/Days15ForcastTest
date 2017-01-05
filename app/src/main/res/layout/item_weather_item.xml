@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+
+    <!--<View-->
+    <!--android:layout_width="0.5dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="#0000ffee"/>-->
+    
+    <!---->
+    <!--android:focusableInTouchMode="true"-->
+    <!--android:focusable="true"-->
+    <LinearLayout
+        android:id="@+id/ll_item"
+        android:layout_width="79dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_click"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        >
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#0000ffee"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="今天"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="12/30"
+            />
+
+        <TextView
+            android:id="@+id/id_day_text_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="多云"
+            />
+
+        <ImageView
+            android:id="@+id/id_day_icon_iv"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/www1"/>
+
+        <!--<com.admai.days15forcasttest.WeatherLineView-->
+            <!--android:id="@+id/wea_line"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="200dp"-->
+            <!--WeatherLineView:temperTextSize="12dp"-->
+            <!--WeatherLineView:textDotDistance="10dp"-->
+            <!--WeatherLineView:weaLineWidth="2dp"-->
+            <!--WeatherLineView:weadotRadius="3dp"-->
+            <!--WeatherLineView:weatextColor="@color/colorAccent"-->
+            <!--/>-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            />
+        <ImageView
+            android:id="@+id/id_night_icon_iv"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/www2"/>
+
+        <TextView
+            android:id="@+id/id_night_text_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="多云"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="西北风\n三级"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="轻度"
+            />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#0000ffee"/>-->
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="#0000ffee"/>
+
+</LinearLayout>

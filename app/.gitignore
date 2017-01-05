@@ -1,0 +1,5 @@
+### Android In template
+/build
+/src/test
+/src/androidTest
+/src/debug
