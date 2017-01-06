@@ -10,8 +10,6 @@ public class Series {
 	 * 序列曲线的颜色
 	 */
 	private int color;
-	
-	public int pointR;
 	/**
 	 * 序列点集合
 	 */
@@ -81,8 +79,5 @@ public class Series {
 	}
 	public void setUp(boolean up) {
 		isUp = up;
-	}
-	public void setPointR(int r) {
-		this.pointR = r;
 	}
 }

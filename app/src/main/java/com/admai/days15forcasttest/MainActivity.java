@@ -5,18 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
-import com.admai.days15forcasttest.bessel.BesselCalculator;
 import com.admai.days15forcasttest.bessel.BesselChartView;
 import com.admai.days15forcasttest.bessel.ChartData;
-import com.admai.days15forcasttest.bessel.ChartStyle;
 import com.admai.days15forcasttest.bessel.Series;
-import com.admai.days15forcasttest.hours.DisplayUtil;
 import com.admai.days15forcasttest.hours.IndexHorizontalScrollView;
 import com.admai.days15forcasttest.hours.Today24HourView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,13 +26,13 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 	
+	private static final String TAG = "MainActivity";
 	private RecyclerView mRecyclerView;
 	private List<WeatherDailyModel> mWeatherModels;
 	private WeaDataAdapter mWeaDataAdapter;
 	private IndexHorizontalScrollView indexHorizontalScrollView;
 	private Today24HourView today24HourView;
 	private RelativeLayout mLChart;
-	private ChartStyle style;
 	private ChartData data;
 	
 	@Override
@@ -43,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
 //		initViews();
 		initBessel();
 		fillDatatoRecyclerView(createDatas());
+		String day = "20170106";
+		StringBuffer stringBuffer = new StringBuffer(day);
+		StringBuffer insert = stringBuffer.insert(4, "-").insert(7,"-");
+		try {
+			String week = dayForWeek(insert.toString());
+			Log.e(TAG, "onCreate: " + week+",:"+insert.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -59,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 	
 	private void initBessel() {
 		mLChart = (RelativeLayout) findViewById(R.id.ll_chart);
+		BesselChartView besselChart = (BesselChartView) findViewById(R.id.bessel_chart);
 		List<Series> seriess = new ArrayList<Series>();
 		ArrayList<Integer> temps = new ArrayList<>();
 		ArrayList<Integer> temps2 = new ArrayList<>();
@@ -76,19 +86,18 @@ public class MainActivity extends AppCompatActivity {
 		Series series = new Series(Color.RED, temps);
 		Series series2 = new Series(Color.BLUE, temps2);
 		series.setUp(true);
-		series.setPointR(DisplayUtil.dip2px(this, 3));
 		series2.setUp(false);
-		series2.setPointR(DisplayUtil.dip2px(this, 3));
 		seriess.add(series);
 		seriess.add(series2);
-		style = new ChartStyle();
-		data = new ChartData();
-		data.setSeriesList(seriess);
-		BesselCalculator calculator = new BesselCalculator(data, style);
-		calculator.compute(DisplayUtil.dip2px(this, 80),DisplayUtil.dip2px(this, 80),DisplayUtil.dip2px(this, 20));
-		BesselChartView besselChartView = new BesselChartView(this, data, style, calculator);
-		besselChartView.updateSize();
-		mLChart.addView(besselChartView);
+//		data = new ChartData();
+//		data.setSeriesList(seriess);
+//		BesselCalculator calculator = new BesselCalculator(data);
+//		calculator.compute(DisplayUtil.dip2px(this, 80),DisplayUtil.dip2px(this, 80),DisplayUtil.dip2px(this, 20));
+//		BesselChartView besselChartView = new BesselChartView(this, data, calculator);
+//		besselChartView.updateSize();
+//		mLChart.addView(besselChartView);
+		besselChart.setSeriesList(seriess);
+		
 		
 	}
 	
@@ -150,6 +159,40 @@ public class MainActivity extends AppCompatActivity {
 //		//        ll_chart.addView(chartView);
 //		
 //	}
+	
+	public static String dayForWeek(String pTime) throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(format.parse(pTime));
+		int dayForWeek = 0;
+		String week = "";
+		dayForWeek = c.get(Calendar.DAY_OF_WEEK);
+		switch (dayForWeek) {
+			case 1:
+				week = "星期日";
+				break;
+			case 2:
+				week = "星期一";
+				break;
+			case 3:
+				week = "星期二";
+				break;
+			case 4:
+				week = "星期三";
+				break;
+			case 5:
+				week = "星期四";
+				break;
+			case 6:
+				week = "星期五";
+				break;
+			case 7:
+				week = "星期六";
+				break;
+		}
+		return week;
+	}
+	
 }
 
 

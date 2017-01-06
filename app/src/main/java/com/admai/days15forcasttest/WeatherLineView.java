@@ -153,8 +153,7 @@ public class WeatherLineView extends View {
 	private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WeatherLineView, defStyleAttr, 0);
 		
-		mTemperTextSize = (int) a.getDimension(R.styleable.WeatherLineView_temperTextSize, 
-		                                       dp2px(context, mTemperTextSize));
+		mTemperTextSize = (int) a.getDimension(R.styleable.WeatherLineView_temperTextSize, dp2px(context, mTemperTextSize));
 		
 		mWeaTextColor = a.getColor(R.styleable.WeatherLineView_weatextColor, Color.parseColor("#b07b5c"));
 		

@@ -12,4 +12,27 @@
         <!-- 文字离圆点的距离 -->
         <attr name="textDotDistance" format="dimension"/>
     </declare-styleable>
+    
+     <declare-styleable name="BesselChartView">
+        <!-- 度数文字的大小 -->
+        <attr name="tempTextSize" format="dimension"/>
+        <!-- 度数文字的颜色 -->
+        <attr name="tempTextColor" format="color"/>
+        <attr name="backgroundColor" format="color"/>
+        <!-- 曲线线的宽度 -->
+        <attr name="tempLineWidth" format="dimension"/>
+        <!-- 绘制的圆点的半径 -->
+        <attr name="tempDotRadius" format="dimension"/>
+        <!-- 上间距 -->
+        <attr name="marLong" format="dimension"/>
+        <!-- 下间距 -->
+        <attr name="marShort" format="dimension"/>
+         <!--item宽度-->
+        <attr name="itemWidth" format="dimension"/>
+         <!--item高度-->
+        <attr name="itemHeight" format="dimension"/>
+         <!--是否画出控制节点-->
+        <attr name="isDrawBesselPoint" format="boolean"/>
+         
+    </declare-styleable>
 </resources>

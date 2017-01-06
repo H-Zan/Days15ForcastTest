@@ -1,19 +1,17 @@
 package com.admai.days15forcasttest.bessel;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.support.v4.view.ViewCompat;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.MotionEvent;
+import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Scroller;
+import android.widget.RelativeLayout;
 
-import com.admai.days15forcasttest.hours.DisplayUtil;
+import com.admai.days15forcasttest.R;
 
 import java.util.List;
 
@@ -28,95 +26,78 @@ public class BesselChartView extends View {
     private Paint paint;
     /** 曲线的路径，用于绘制曲线 */
     private Path curvePath;
-    /** 曲线图绘制的计算信息 */
-    private BesselCalculator calculator;
-    /** 曲线图的样式 */
-    private ChartStyle style;
     /** 曲线图的数据 */
     private ChartData data;
-    /** 手势解析 */
-    private GestureDetector detector;
     /** 是否绘制全部贝塞尔结点 */
-    private boolean drawBesselPoint;
-    /** 滚动计算器 */
-    private Scroller scroller;
-    /** 曲线图事件监听器 */
-//    private ChartListener chartListener;
-
-    public BesselChartView(Context context, ChartData data, ChartStyle style, BesselCalculator calculator) {
-        super(context);
-        setBackgroundColor(Color.TRANSPARENT);//背景色
-        this.calculator = calculator;
-        this.data = data;
-        this.style = style;
+    private boolean drawBesselPoint = false;
+    private int mTempTextSize = 12;
+    private int mTempTextColor;
+    private int mBackgroundColor;
+    private int mTempLineWidth = 2;
+    private int mTempDotRadius = 3;
+    private int mItemWidth = 80;
+    private int mItemHeight = 80;
+    private int mMarLong = 20;
+    private int mMarShort = 0;
+    
+    public BesselChartView(Context context) {
+        this(context, null);
+    
+    }
+    public BesselChartView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+    public BesselChartView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs, defStyleAttr);
+        initPaint();
+    }
+   
+    
+    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BesselChartView, defStyleAttr, 0);
+        mTempTextSize = (int) a.getDimension(R.styleable.BesselChartView_tempTextSize, dp2px(context, mTempTextSize));
+        mTempTextColor = a.getColor(R.styleable.BesselChartView_tempTextColor, Color.WHITE);
+        mBackgroundColor = a.getColor(R.styleable.BesselChartView_backgroundColor, Color.TRANSPARENT);
+        mTempLineWidth = (int) a.getDimension(R.styleable.BesselChartView_tempLineWidth, dp2px(context, mTempLineWidth));
+        mTempDotRadius = (int) a.getDimension(R.styleable.BesselChartView_tempDotRadius, dp2px(context, mTempDotRadius));
+        mItemWidth = (int) a.getDimension(R.styleable.BesselChartView_itemWidth, dp2px(context, mItemWidth));
+        mItemHeight = (int) a.getDimension(R.styleable.BesselChartView_itemHeight, dp2px(context, mItemHeight));
+        mMarLong = (int) a.getDimension(R.styleable.BesselChartView_marLong, dp2px(context, mMarLong));
+        mMarShort = (int) a.getDimension(R.styleable.BesselChartView_marShort, dp2px(context, mMarShort));
+        drawBesselPoint = a.getBoolean(R.styleable.BesselChartView_isDrawBesselPoint, drawBesselPoint);
+        a.recycle();
+    }
+    
+    
+    private void initPaint() {
+        setBackgroundColor(mBackgroundColor);//背景色
         this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.curvePath = new Path();
-        this.drawBesselPoint = false;
-        this.scroller = new Scroller(context);
-
-        this.detector = new GestureDetector(getContext(), new SimpleOnGestureListener() {
-            float lastScrollX = 0f;
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                if (Math.abs(distanceX / distanceY) > 1) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                    BesselChartView.this.calculator.move(distanceX);
-                    ViewCompat.postInvalidateOnAnimation(BesselChartView.this);
-                    if (e1.getX() != lastScrollX) {
-                        lastScrollX = e1.getX();
-//                        if (chartListener != null)
-//                            chartListener.onMove();
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                scroller.fling((int) BesselChartView.this.calculator.getTranslateX(), 0, (int) velocityX, 0, -getWidth(), 0, 0, 0);
-                ViewCompat.postInvalidateOnAnimation(BesselChartView.this);
-                return true;
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                scroller.forceFinished(true);
-                ViewCompat.postInvalidateOnAnimation(BesselChartView.this);
-                return true;
-            }
-        });
     }
-
-    public void animateScrollToEnd(int duration) {
-        scroller.startScroll(0, 0, -calculator.xAxisWidth / 2, 0, duration);
+    
+    public void setSeriesList(List<Series> seriesList) {
+        this.data = new ChartData();
+        data.setSeriesList(seriesList);
+        BesselCalculator calculator = new BesselCalculator(data);
+        calculator.compute(mItemHeight,mItemWidth,mMarLong,mMarShort,mTempDotRadius);
+        setLayoutParams(new RelativeLayout.LayoutParams(calculator.xAxisWidth, calculator.height));
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return detector.onTouchEvent(event);
+    
+    public static int dp2px(Context context, float dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, context.getResources().getDisplayMetrics());
     }
-
-    @Override
-    public void computeScroll() {
-        if (scroller.computeScrollOffset()) {
-            calculator.moveTo(scroller.getCurrX());
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-    }
-
+    
     @Override
     protected void onDraw(Canvas canvas) {
         if (data.getSeriesList().size() == 0)
             return;
-        calculator.ensureTranslation();
-        canvas.translate(calculator.getTranslateX(), 0);
-        
         drawCurveAndPoints(canvas);
     }
 
     /** 绘制曲线和结点 */
     private void drawCurveAndPoints(Canvas canvas) {
-        paint.setStrokeWidth(DisplayUtil.dip2px(getContext(), 2));
+        paint.setStrokeWidth(mTempLineWidth);
         for (Series series : data.getSeriesList()) {
             paint.setColor(series.getColor());
             curvePath.reset();
@@ -133,12 +114,14 @@ public class BesselChartView extends View {
             paint.setStyle(Paint.Style.FILL);
             List<Point> points = series.getPoints();
                 for (int i = 0; i < points.size(); i++) {
+                    paint.setColor(series.getColor());
                     Point point = points.get(i);
-                    canvas.drawCircle(point.x, point.y, series.pointR, paint);
+                    canvas.drawCircle(point.x, point.y, mTempDotRadius, paint);
                     Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
                     int baseline = (point.txtTempRect.bottom + point.txtTempRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
                     paint.setTextAlign(Paint.Align.CENTER);
-                    paint.setTextSize(DisplayUtil.dip2px(getContext(),12));
+                    paint.setTextSize(mTempTextSize);
+                    paint.setColor(mTempTextColor);
                     canvas.drawText(String.valueOf(series.getTemps().get(i)), point.txtTempRect.centerX(), baseline, paint);
                 }// 绘制结点
             if (drawBesselPoint) {
@@ -153,13 +136,6 @@ public class BesselChartView extends View {
         }
     }
     
-    public void updateSize() {
-//        LayoutParams lp = getLayoutParams();
-//        lp.height = calculator.height;
-//        lp.width = calculator.xAxisWidth;
-        setLayoutParams(new LayoutParams(calculator.xAxisWidth,calculator.height));
-    }
-
     public void setDrawBesselPoint(boolean drawBesselPoint) {
         this.drawBesselPoint = drawBesselPoint;
     }

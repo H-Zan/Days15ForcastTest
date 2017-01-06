@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="80dp"
+    android:layout_width="60dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     >
@@ -16,7 +16,7 @@
     <!--android:focusable="true"-->
     <LinearLayout
         android:id="@+id/ll_item"
-        android:layout_width="79dp"
+        android:layout_width="59dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_click"
         android:clickable="true"
@@ -73,7 +73,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="115dp"
             />
         <ImageView
             android:id="@+id/id_night_icon_iv"
