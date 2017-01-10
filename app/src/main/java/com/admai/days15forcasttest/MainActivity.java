@@ -8,17 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
+import com.admai.days15forcasttest.bean.WeatherData;
+import com.admai.days15forcasttest.bean.weatherBean;
 import com.admai.days15forcasttest.bessel.BesselChartView;
 import com.admai.days15forcasttest.bessel.ChartData;
 import com.admai.days15forcasttest.bessel.Series;
 import com.admai.days15forcasttest.hours.IndexHorizontalScrollView;
 import com.admai.days15forcasttest.hours.Today24HourView;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
 	
 	private static final String TAG = "MainActivity";
 	private RecyclerView mRecyclerView;
-	private List<WeatherDailyModel> mWeatherModels;
+//	private List<WeatherDailyModel> mWeatherModels;
+	private List<com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean> mWeatherModels;
 	private WeaDataAdapter mWeaDataAdapter;
 	private IndexHorizontalScrollView indexHorizontalScrollView;
 	private Today24HourView today24HourView;
@@ -41,8 +43,18 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		initView();  
 //		initViews();
-		initBessel();
-		fillDatatoRecyclerView(createDatas());
+//		initBessel();
+//		fillDatatoRecyclerView(createDatas());
+		weatherBean weatherBean = new Gson().fromJson(WeatherData.weatherData, weatherBean.class);
+		List<com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean> dayList = weatherBean.getShowapi_res_body().getDayList();
+		ArrayList<Integer> tempsDay = new ArrayList<>();
+		ArrayList<Integer> tempsNight = new ArrayList<>();
+		for (int i = 0; i < dayList.size(); i++) {
+			tempsDay.add(Integer.valueOf(dayList.get(i).getDay_air_temperature()));
+			tempsNight.add(Integer.valueOf(dayList.get(i).getNight_air_temperature()));
+		}
+		initBessel(tempsDay,tempsNight);
+		fillDatatoRecyclerView(dayList);
 		String day = "20170106";
 		StringBuffer stringBuffer = new StringBuffer(day);
 		StringBuffer insert = stringBuffer.insert(4, "-").insert(7,"-");
@@ -66,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 		
 	}
 	
-	private void initBessel() {
+	private void initBessel2() {
 		mLChart = (RelativeLayout) findViewById(R.id.ll_chart);
 		BesselChartView besselChart = (BesselChartView) findViewById(R.id.bessel_chart);
 		List<Series> seriess = new ArrayList<Series>();
@@ -101,6 +113,19 @@ public class MainActivity extends AppCompatActivity {
 		
 	}
 	
+	private void initBessel(ArrayList<Integer> temps,ArrayList<Integer> temps2) {
+		mLChart = (RelativeLayout) findViewById(R.id.ll_chart);
+		BesselChartView besselChart = (BesselChartView) findViewById(R.id.bessel_chart);
+		List<Series> seriess = new ArrayList<>();
+		Series series = new Series(Color.WHITE, temps);
+		Series series2 = new Series(Color.parseColor("#1F96F2"), temps2);
+		series.setUp(true);
+		series2.setUp(false);
+		seriess.add(series);
+		seriess.add(series2);
+		besselChart.setSeriesList(seriess);
+	}
+	
 	
 	/**
 	 * date : 2016-05-30
@@ -123,30 +148,36 @@ public class MainActivity extends AppCompatActivity {
 		return weatherDailyModels;
 	}
 	
-	private void fillDatatoRecyclerView(List<WeatherDailyModel> daily) {
+//	private void fillDatatoRecyclerView(List<WeatherDailyModel> daily) {
+//		mWeatherModels = daily;
+//		Collections.sort(daily, new Comparator<WeatherDailyModel>() {
+//			@Override
+//			public int compare(WeatherDailyModel lhs,
+//			                   WeatherDailyModel rhs) {
+//				// 排序找到温度最低的，按照最低温度升序排列
+//				return lhs.getLow() - rhs.getLow();
+//			}
+//		});
+//		
+//		int low = daily.get(0).getLow();
+//		
+//		Collections.sort(daily, new Comparator<WeatherDailyModel>() {
+//			@Override
+//			public int compare(WeatherDailyModel lhs,
+//			                   WeatherDailyModel rhs) {
+//				// 排序找到温度最高的，按照最高温度降序排列
+//				return rhs.getHigh() - lhs.getHigh();
+//			}
+//		});
+//		int high = daily.get(0).getHigh();
+//		
+//		mWeaDataAdapter = new WeaDataAdapter(this, mWeatherModels, low, high);
+//		mRecyclerView.setAdapter(mWeaDataAdapter);
+//	}
+	private void fillDatatoRecyclerView(List<com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean> daily ) {
 		mWeatherModels = daily;
-		Collections.sort(daily, new Comparator<WeatherDailyModel>() {
-			@Override
-			public int compare(WeatherDailyModel lhs,
-			                   WeatherDailyModel rhs) {
-				// 排序找到温度最低的，按照最低温度升序排列
-				return lhs.getLow() - rhs.getLow();
-			}
-		});
 		
-		int low = daily.get(0).getLow();
-		
-		Collections.sort(daily, new Comparator<WeatherDailyModel>() {
-			@Override
-			public int compare(WeatherDailyModel lhs,
-			                   WeatherDailyModel rhs) {
-				// 排序找到温度最高的，按照最高温度降序排列
-				return rhs.getHigh() - lhs.getHigh();
-			}
-		});
-		int high = daily.get(0).getHigh();
-		
-		mWeaDataAdapter = new WeaDataAdapter(this, mWeatherModels, low, high);
+		mWeaDataAdapter = new WeaDataAdapter(this, mWeatherModels);
 		mRecyclerView.setAdapter(mWeaDataAdapter);
 	}
 	

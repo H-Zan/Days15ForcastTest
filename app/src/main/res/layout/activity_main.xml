@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:background="#114B63"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
@@ -27,7 +28,7 @@
            <RelativeLayout
                android:id="@+id/ll_chart"
                android:layout_width="match_parent"
-               android:layout_height="130dp"
+               android:layout_height="114dp"
                android:layout_centerVertical="true"
                >
                
@@ -41,7 +42,6 @@
                app:tempTextSize="12dp"
                app:itemHeight="50dp"
                app:itemWidth="60dp"
-               app:backgroundColor="#772662"
                app:isDrawBesselPoint="false"
                app:marLong="20dp"
                app:marShort="3dp"

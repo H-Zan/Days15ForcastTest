@@ -6,4 +6,6 @@
     <color name="colorBackGround">#D6E7E9</color>
     <color name="colorItem">#3c000000</color>
     <color name="colorItemPressed">#82000000</color>
+    <color name="white">#ffffff</color>
+    <color name="line_night">#1F95F2</color>
 </resources>

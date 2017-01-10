@@ -20,6 +20,7 @@ public class WeatherDailyModel {
 	private int code_day;
 	private String text_night;
 	private int code_night;
+	private int aqi;
 	private int high;
 	private int low;
 	

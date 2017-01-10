@@ -20,7 +20,8 @@ public class WeaDataAdapter extends RecyclerView.Adapter<WeaDataAdapter.WeatherD
 	private static final String TAG = WeaDataAdapter.class.getSimpleName();
 	private Context mContext;
 	private LayoutInflater mInflater;
-	private List<WeatherDailyModel> mDatas;
+//	private List<WeatherDailyModel> mDatas;
+	private List<com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean> mDatas;
 	private int mLowestTem;
 	private int mHighestTem;
 	onItemClickListener mOnItemClickListener;
@@ -29,12 +30,17 @@ public class WeaDataAdapter extends RecyclerView.Adapter<WeaDataAdapter.WeatherD
 		mOnItemClickListener = onItemClickListener;
 	}
 	
-	public WeaDataAdapter(Context context, List<WeatherDailyModel> datats, int lowtem, int hightem) {
+//	public WeaDataAdapter(Context context, List<WeatherDailyModel> datats, int lowtem, int hightem) {
+//		mContext = context;
+//		mInflater = LayoutInflater.from(context);
+//		mDatas = datats;
+//		mLowestTem = lowtem;
+//		mHighestTem = hightem;
+//	}
+	public WeaDataAdapter(Context context, List<com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean> datats) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mDatas = datats;
-		mLowestTem = lowtem;
-		mHighestTem = hightem;
 	}
 	
 	@Override
@@ -42,24 +48,14 @@ public class WeaDataAdapter extends RecyclerView.Adapter<WeaDataAdapter.WeatherD
 		View view = mInflater.inflate(R.layout.item_weather_item, parent, false);
 		final WeatherDataViewHolder viewHolder = new WeatherDataViewHolder(view);
 		viewHolder.dayText = (TextView) view.findViewById(R.id.id_day_text_tv);
+		viewHolder.txt_aqi = (TextView) view.findViewById(R.id.txt_aqi);
+		viewHolder.txt_date_num = (TextView) view.findViewById(R.id.txt_date_num);
+		viewHolder.txt_weekday = (TextView) view.findViewById(R.id.txt_weekday);
+		viewHolder.txt_wind_dau = (TextView) view.findViewById(R.id.txt_wind_dura);
+		viewHolder.txt_wind_power = (TextView) view.findViewById(R.id.txt_wind_power);
 		viewHolder.dayIcon = (ImageView) view.findViewById(R.id.id_day_icon_iv);
-//		viewHolder.weatherLineView = (WeatherLineView) view.findViewById(R.id.wea_line);
 		viewHolder.nighticon = (ImageView) view.findViewById(R.id.id_night_icon_iv);
 		viewHolder.nightText = (TextView) view.findViewById(R.id.id_night_text_tv);
-//		viewHolder.ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
-		
-//		viewHolder.ll_item.setOnTouchListener(new View.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//					viewHolder.ll_item.setBackgroundColor(Color.BLUE);
-//				}
-//				if (event.getAction() == MotionEvent.ACTION_UP||event.getAction() == MotionEvent.ACTION_MOVE) {
-//					viewHolder.ll_item.setBackgroundColor(Color.parseColor("#68aca3"));
-//				}
-//				return true;
-//			}
-//		});
 		return viewHolder;
 	}
 	
@@ -67,43 +63,29 @@ public class WeaDataAdapter extends RecyclerView.Adapter<WeaDataAdapter.WeatherD
 	public void onBindViewHolder(WeatherDataViewHolder holder, int position) {
 		// 最低温度设置为15，最高温度设置为30
 		Resources resources = mContext.getResources();
-		WeatherDailyModel weatherModel = mDatas.get(position);
-		holder.dayText.setText(weatherModel.getText_day());
-		int iconday = resources.getIdentifier("wth_code_" + weatherModel.getCode_day(), "drawable", mContext.getPackageName());
+		com.admai.days15forcasttest.bean.weatherBean.ShowapiResBodyBean.DayListBean weatherModel = mDatas.get(position);
+		holder.dayText.setText(weatherModel.getDay_weather());
+		holder.txt_aqi.setText("空气质量");
+		holder.txt_date_num.setText(weatherModel.getDaytime().substring(4,6)+"/"+weatherModel.getDaytime().substring(6,8));
+		holder.txt_weekday.setText(weatherModel.getDaytime());
+		holder.txt_wind_dau.setText(weatherModel.getDay_wind_direction());
+		holder.txt_wind_power.setText(weatherModel.getDay_wind_power());
+//		int iconday = resources.getIdentifier("wth_code_" + weatherModel.getCode_day(), "drawable", mContext.getPackageName());
+		int iconday = 0;
 		if (iconday == 0) {
 			holder.dayIcon.setImageResource(R.drawable.www1);
 		} else {
 			holder.dayIcon.setImageResource(iconday);
 		}
 //		holder.weatherLineView.setLowHighestData(mLowestTem, mHighestTem);
-		int iconight = resources.getIdentifier("wth_code_" + weatherModel.getCode_day(), "drawable", mContext.getPackageName());
+//		int iconight = resources.getIdentifier("wth_code_" + weatherModel.getCode_day(), "drawable", mContext.getPackageName());
+		int iconight = 0;
 		if (iconight == 0) {
 			holder.nighticon.setImageResource(R.drawable.www2);
 		} else {
 			holder.nighticon.setImageResource(iconight);
 		}
-		holder.nightText.setText(weatherModel.getText_night());
-		int low[] = new int[3];
-		int high[] = new int[3];
-		low[1] = weatherModel.getLow();
-		high[1] = weatherModel.getHigh();
-		if (position <= 0) {
-			low[0] = 0;
-			high[0] = 0;
-		} else {
-			WeatherDailyModel weatherModelLeft = mDatas.get(position - 1);
-			low[0] = (weatherModelLeft.getLow() + weatherModel.getLow()) / 2;
-			high[0] = (weatherModelLeft.getHigh() + weatherModel.getHigh()) / 2;
-		}
-		if (position >= mDatas.size() - 1) {
-			low[2] = 0;
-			high[2] = 0;
-		} else {
-			WeatherDailyModel weatherModelRight = mDatas.get(position + 1);
-			low[2] = (weatherModel.getLow() + weatherModelRight.getLow()) / 2;
-			high[2] = (weatherModel.getHigh() + weatherModelRight.getHigh()) / 2;
-		}
-//		holder.weatherLineView.setLowHighData(low, high);
+		holder.nightText.setText(weatherModel.getNight_weather());
 	}
 	
 	@Override
@@ -113,9 +95,13 @@ public class WeaDataAdapter extends RecyclerView.Adapter<WeaDataAdapter.WeatherD
 	
 	public static class WeatherDataViewHolder extends RecyclerView.ViewHolder {
 		
+		TextView txt_weekday;
+		TextView txt_date_num;
+		TextView txt_aqi;
+		TextView txt_wind_dau;
+		TextView txt_wind_power;
 		TextView dayText;
 		ImageView dayIcon;
-//		WeatherLineView weatherLineView;
 		ImageView nighticon;
 		TextView nightText;
 		LinearLayout ll_item;
